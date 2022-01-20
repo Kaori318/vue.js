@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <AddPayment @add-payment="addNewPayment"/>
+    <AddPayment
+    @add-payment="addNewPayment" :categoryList="categoryList"/>
     <PaymentDisplay :items="paymentsList"/>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PaymentDisplay from './components/PaymentDisplay.vue';
 import AddPayment from './components/AddPaymentForm.vue';
 
@@ -15,38 +17,28 @@ export default {
     PaymentDisplay,
     AddPayment,
   },
-  data() {
-    return {
-      paymentsList: [],
-    };
-  },
   methods: {
-    fetchData() {
-      return [
-        {
-          date: '28.03.2020',
-          category: 'Food',
-          value: 169,
-        },
-        {
-          date: '24.03.2020',
-          category: 'Transport',
-          value: 360,
-        },
-        {
-          date: '24.03.2020',
-          category: 'Food',
-          value: 532,
-        },
-      ];
-    },
+    ...mapActions([
+      'fetchData',
+      'fetchCategoryListData',
+    ]),
+    ...mapMutations([
+      'ADD_PAYMENT_DATA',
+      'UPDATE_PAYMENT_DATA',
+    ]),
     addNewPayment(payment) {
-      console.log('addNewPayment', payment);
-      this.paymentsList.push(payment);
+      this.ADD_PAYMENT_DATA(payment);
     },
+  },
+  computed: {
+    ...mapGetters([
+      'paymentsList',
+      'categoryList',
+    ]),
   },
   created() {
-    this.paymentsList = this.fetchData();
+    this.fetchData();
+    this.fetchCategoryListData();
   },
 };
 </script>
