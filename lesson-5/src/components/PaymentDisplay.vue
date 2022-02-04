@@ -7,29 +7,54 @@
         <p>Category</p>
         <p>Value</p>
       </div>
-      <div class="table__body" v-for="(item, index) in items" :key="index">
-        <p>{{ index + 1 }}</p>
+      <div class="table__body" v-for="(item, index) in paginaitedItems" :key="index">
+        <p>{{ index + 1 + (perPage * (pageNumber - 1)) }}</p>
         <p>{{ item.date }}</p>
         <p>{{ item.category }}</p>
         <p>{{ item.value }}</p>
       </div>
     </div>
+    <Pagination
+      :pageNumber="pageNumber"
+      :perPage="perPage"
+      :itemsCount="items"
+      @activePage="pageChange"
+    />
   </div>
 </template>
 
 <script>
+import Pagination from '@/components/Pagination.vue';
+
 export default {
   name: 'PaymentDisplay',
+  components: {
+    Pagination,
+  },
+  data() {
+    return {
+      pageNumber: 1,
+      // this.$route.params.page ||
+      perPage: 5,
+    };
+  },
   props: {
     items: {
       type: Array,
       // required: true,
       default: () => [],
     },
-    show: {
-      type: Boolean,
-      default: true,
-      // required: true,
+  },
+  computed: {
+    paginaitedItems() {
+      const from = (this.pageNumber - 1) * this.perPage;
+      const to = from + this.perPage;
+      return this.items.slice(from, to);
+    },
+  },
+  methods: {
+    pageChange(page) {
+      this.pageNumber = page;
     },
   },
 };

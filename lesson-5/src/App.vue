@@ -1,44 +1,26 @@
 <template>
   <div id="app">
-    <AddPayment
-    @add-payment="addNewPayment" :categoryList="categoryList"/>
-    <PaymentDisplay :items="paymentsList"/>
+      <nav class="nav">
+        <!-- <router-link to="payment">Dashboard</router-link> -->
+        <!-- <button @click="goToPage('notfound')">Go To NotFound</button> -->
+        <!-- <router-link to="notfound">Not Found</router-link> -->
+      </nav>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
-import PaymentDisplay from './components/PaymentDisplay.vue';
-import AddPayment from './components/AddPaymentForm.vue';
-
 export default {
   name: 'App',
   components: {
-    PaymentDisplay,
-    AddPayment,
   },
+  data: () => ({
+    page: 'payment',
+  }),
   methods: {
-    ...mapActions([
-      'fetchData',
-      'fetchCategoryListData',
-    ]),
-    ...mapMutations([
-      'ADD_PAYMENT_DATA',
-      'UPDATE_PAYMENT_DATA',
-    ]),
-    addNewPayment(payment) {
-      this.ADD_PAYMENT_DATA(payment);
-    },
-  },
-  computed: {
-    ...mapGetters([
-      'paymentsList',
-      'categoryList',
-    ]),
-  },
-  created() {
-    this.fetchData();
-    this.fetchCategoryListData();
+    // goToPage(pageName) {
+    //   this.$router.push(pageName);
+    // },
   },
 };
 </script>
@@ -54,5 +36,18 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.nav {
+  margin-bottom: 20px;
+  a {
+    margin-left: 20px;
+    color: rgb(126, 123, 123);
+    text-decoration: none;
+    font-size: 18px;
+    &:hover {
+      color: #000;
+    }
+  }
 }
 </style>

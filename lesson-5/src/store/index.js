@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import cat from './category/cat';
-import pay from './category/pay';
+import PaymentCategory from './category/PaymentCategory';
+import Payment from './category/Payment';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    cat,
-    pay,
+    PaymentCategory,
+    Payment,
   },
 });

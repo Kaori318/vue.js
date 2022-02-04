@@ -1,6 +1,8 @@
 <template>
   <div class="add-new-costs">
-    <button @click='show = !show' class="btn__new-costs">ADD NEW COSTS +</button>
+    <button @click='show = !show' class="btn__new-costs">
+      ADD NEW COSTS +
+    </button>
     <div class="add-new-costs__form" v-if="show">
       <div class="add-new-costs__form__input">
         <input type="text" placeholder="Payment date" v-model="date">
@@ -8,13 +10,12 @@
           <input type="text"
             placeholder="Payment description"
             v-model="category">
-          <div class="a" @click='hidden = !hidden'>
+          <div class="categoryInput" @click='hidden = !hidden'>
             <template v-if="hidden">&#9650;</template>
             <template v-else>&#9660;</template>
             <div v-if="hidden" class="b">
               <p v-for="category of categoryList"
-              :value="category"
-              :key="category"
+              :value="category" :key="category"
               @click="categorySelection(category)"
               >{{ category }}
               </p>
@@ -41,10 +42,10 @@ export default {
   },
   data() {
     return {
-      value: '',
-      category: '',
+      value: +this.$route.query.value || 0,
+      category: this.$route.params.category || '',
       date: '',
-      show: false,
+      show: true,
       hidden: false,
     };
   },
@@ -58,6 +59,18 @@ export default {
       return `${day}.${month}.${year}`;
     },
   },
+  mounted() {
+    if (this.categoryList.length === 0) {
+      this.loadCategories();
+    }
+    const cat = this.$route.params.category;
+    const val = +this.$route.query.value;
+    if (cat && (val > 0)) {
+      this.category = cat;
+      this.value = val;
+      this.addPayment();
+    }
+  },
   methods: {
     categorySelection(categoryItem) {
       console.log(categoryItem);
@@ -70,8 +83,9 @@ export default {
         category,
         date: +date || this.paymentDate,
       };
-
       this.$emit('add-payment', data);
+      console.log('add-payment');
+      this.$router.push({ name: 'payment' });
     },
   },
 };
@@ -142,7 +156,7 @@ export default {
     border-radius: 5px 0 0 5px;
     border-right: 0px;
   }
-  .a {
+  .categoryInput {
     padding-top: 10px;
     box-sizing: border-box;
     position: relative;
